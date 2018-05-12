@@ -7,12 +7,15 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { GasService } from './shared/gas.service';
 import { ToastrModule } from 'ngx-toastr';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
     FormsModule,

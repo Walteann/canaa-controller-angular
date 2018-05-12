@@ -1,6 +1,6 @@
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
   setTimeout(function(){ 
-    $('#dataTable').DataTable();
+    $('#dataTable3').DataTable();
    }, 10000);
 });

@@ -82,7 +82,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     constructor(
         private _gasService: GasService,
-        private _toastr: ToastrService
+        private toast: ToastrService
     ) {
 
     }
@@ -100,7 +100,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     buscarEmployee() {
         this.xis = this._gasService.getData();
         this.xis.snapshotChanges().subscribe(item => {
-            this._toastr.success('NOVO PEDIDO!!', 'Teste');
+            this.toast.success('NOVO PEDIDO!!', 'Realizado');
             this.gasList = [];
             item.forEach(element => {
                 this.ypson = element.payload.toJSON();
@@ -110,6 +110,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
     }
 
+    onDelete(key: string) {
+        if (confirm('Você tem ceteza que quer deletar??') === true) {
+            this._gasService.deleteEmployee(key);
+            this.toast.warning('Deletado Com Sucesso!!', 'Pedido foi Deletado');
+        }
+    }
 
     graficoVendasDiarias() {
         this.ctx = document.getElementById('myAreaChart');
