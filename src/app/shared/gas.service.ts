@@ -14,7 +14,7 @@ export class GasService {
     ) { }
 
     getData() {
-        this.gasLista = this.firebase.list('novoPedidoGas');
+        this.gasLista = this.firebase.list('novoPedidoGas', ref => ref.orderByChild('quantidade'));
         return this.gasLista;
     }
 
