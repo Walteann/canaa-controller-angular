@@ -1,8 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as Chart from 'chart.js';
 import { GasModel } from './shared/gas.model';
+import { Endereco } from './shared/endereco.model';
 import { GasService } from './shared/gas.service';
 import { ToastrService } from 'ngx-toastr';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -10,71 +14,16 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AppComponent implements OnInit, AfterViewInit {
     title = 'app';
-
+    usuarios: any = [] ;
     ctx: any;
     ctxBarChart: any;
     myLineChart: any;
     myLineChart2: any;
+    detalhePedido: any = {};
+    usuarioPedido: any = {};
 
-    mock_usuarios = [
-        {
-            nome: 'Waltean Costa 1',
-            endereco: 'Rua Jangadeiro 1',
-            cep: '56350-054',
-            bairro: 'Piedade 1',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-        {
-            nome: 'Waltean Costa 2',
-            endereco: 'Rua Jangadeiro 2',
-            cep: '56350-054',
-            bairro: 'Piedade 2',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-        {
-            nome: 'Waltean Costa 3',
-            endereco: 'Rua Jangadeiro 3',
-            cep: '56350-054',
-            bairro: 'Piedade 3',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-        {
-            nome: 'Waltean Costa 4',
-            endereco: 'Rua Jangadeiro 4',
-            cep: '56350-054',
-            bairro: 'Piedade 4',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-        {
-            nome: 'Waltean Costa 5',
-            endereco: 'Rua Jangadeiro 5',
-            cep: '56350-054',
-            bairro: 'Piedade 5',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-        {
-            nome: 'Waltean Costa 6',
-            endereco: 'Rua Jangadeiro 6',
-            cep: '56350-054',
-            bairro: 'Piedade 6',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-        {
-            nome: 'Waltean Costa 7',
-            endereco: 'Rua Jangadeiro 7',
-            cep: '56350-054',
-            bairro: 'Piedade 7',
-            tel: '(81)98495-8587',
-            email: 'waltean@hotmail.com'
-        },
-
-    ];
+    tamanhoAntigo = 0;
+    novosPedidos = 0;
 
     gasList: GasModel[];
     xis: any;
@@ -82,13 +31,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     constructor(
         private _gasService: GasService,
-        private toast: ToastrService
+        private toast: ToastrService,
+        private db: AngularFireDatabase,
+        private angularFireAuth: AngularFireAuth
     ) {
 
     }
 
     ngOnInit() {
         this.buscarEmployee();
+        // this.buscarUsuarios();
     }
 
     ngAfterViewInit() {
@@ -97,17 +49,66 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     }
 
+    // buscarUsuarios() {
+    //     let keyEndereco;
+    //     let valores;
+    //     this.getAllUsuarios().snapshotChanges()
+    //     .map(changes => {
+    //         return changes.map(c => ({ key: c.payload.key, ...c.payload.val() }));
+    //     }).subscribe(data => {
+    //         // this.usuarios = data;
+    //         // console.log(data[0].enderecos['-LDHQrnAGjHglVAt1rKT']);
+    //         data.forEach((element) =>   {
+    //             keyEndereco = Object.keys(element.enderecos);
+    //             valores = element.enderecos[keyEndereco];
+    //             this.usuarios.push(valores as Endereco);
+    //         });
+    //         console.log(this.usuarios);
+    //     });
+    // }
+
+    getAllUsuarios() {
+        return this.db.list('usuarios');
+    }
+
+    getUserId(key: string) {
+        return this.db.object('usuarios/' + key).snapshotChanges()
+          .map(c => {
+            return { key: c.key, ...c.payload.val() };
+          });
+    }
+
     buscarEmployee() {
         this.xis = this._gasService.getData();
         this.xis.snapshotChanges().subscribe(item => {
-            this.toast.success('NOVO PEDIDO!!', 'Realizado');
             this.gasList = [];
             item.forEach(element => {
                 this.ypson = element.payload.toJSON();
                 this.ypson['$key'] = element.key;
                 this.gasList.push(this.ypson as GasModel);
             });
+
+
+            if (this.tamanhoAntigo + 1 === this.gasList.length) {
+                this.novosPedidos = this.gasList.length - this.tamanhoAntigo;
+                this.tamanhoAntigo = this.gasList.length;
+                this.toast.success('Novo Pedido', 'Novo Pedido foi adicionado');
+            } else if (this.tamanhoAntigo < this.gasList.length) {
+                this.tamanhoAntigo = this.gasList.length;
+            } else if (this.gasList.length > this.tamanhoAntigo) {
+                this.novosPedidos = this.gasList.length - this.tamanhoAntigo;
+                this.tamanhoAntigo = this.gasList.length;
+            } else {
+                this.tamanhoAntigo = this.gasList.length;
+
+            }
         });
+        // if (this.xis.length() === this.tamanhoAntigo) {
+
+        // } else if (this.tamanhoAntigo > this.xis.length) {
+        //     this.tamanhoAntigo = this.xis.length;
+        //     this.toast.success('Novo Pedido', 'Novo Pedido foi adicionado');
+        // }
     }
 
     onDelete(key: string) {
@@ -116,6 +117,17 @@ export class AppComponent implements OnInit, AfterViewInit {
             this.toast.warning('Deletado Com Sucesso!!', 'Pedido foi Deletado');
         }
     }
+
+    detalhes(gas: any) {
+        this.detalhePedido = gas;
+        let teste;
+        this.getUserId(gas.uidUsuario).subscribe(data =>   {
+            teste = Object.keys(data.enderecos);
+            this.usuarioPedido = data.enderecos[teste];
+        });
+    }
+
+
 
     graficoVendasDiarias() {
         this.ctx = document.getElementById('myAreaChart');
@@ -215,3 +227,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
 }
+
+

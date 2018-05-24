@@ -1,25 +1,3 @@
-<!-- <!DOCTYPE html> -->
-<!-- <html lang="pt-br"> -->
-
-<!-- <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<title>Canaã Gás e Água</title>
-	<!-- Bootstrap core CSS-->
-<!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
-<!-- Custom fonts for this template-->
-<!-- <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
-<!-- Page level plugin CSS-->
-<!-- <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet"> -->
-<!-- Custom styles for this template-->
-<!-- <link href="css/sb-admin.css" rel="stylesheet"> -->
-<!-- </head> -->
-
-<!-- <body class="fixed-nav sticky-footer bg-dark" id="page-top">  -->
-<!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
 	<a class="navbar-brand" href="index.html">
 		<img id="logoCanaa" src="./../assets/canaa-logo.png" alt="">
@@ -159,7 +137,7 @@
 						<div class="card-body-icon">
 							<i class="fa fa-fw fa-shopping-cart"></i>
 						</div>
-						<div class="mr-5">15 Novos Pedidos!</div>
+						<div class="mr-5">{{novosPedidos}} Novos Pedidos!</div>
 					</div>
 					<a class="card-footer text-white clearfix small z-1" href="#">
 						<span class="float-left">Ver Detalhes</span>
@@ -251,7 +229,7 @@
 								</tr>
 							</tfoot>
 							<tbody>
-								<tr *ngFor="let usuario of mock_usuarios">
+								<tr *ngFor="let usuario of usuarios">
 									<td>{{usuario.nome}}</td>
 									<td>{{usuario.endereco}}</td>
 									<td>{{usuario.cep}}</td>
@@ -282,25 +260,25 @@
 									<th>Forma Pagamento</th>
 									<th>Data</th>
 									<th>Hora</th>
-									<th>Deletar</th>
+									<th>Ações</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
 									<th>Quantidade</th>
-									<th>Água/Gás</th>									
+									<th>Água/Gás</th>
 									<th>Marca</th>
 									<th>Preco</th>
 									<th>Novo / Retornável</th>
 									<th>Forma Pagamento</th>
 									<th>Data</th>
 									<th>Hora</th>
-									<th>Deletar</th>
-									
+									<th>Ações</th>
+
 								</tr>
 							</tfoot>
 							<tbody>
-								<tr *ngFor="let gas of gasList">
+								<tr *ngFor="let gas of gasList  | reverse">
 									<td>{{gas.quantidade}}</td>
 									<td>{{gas.tipoObjeto}}</td>
 									<td>{{gas.marca}}</td>
@@ -310,9 +288,12 @@
 									<td>{{gas.dataPedido}}</td>
 									<td>{{gas.hora}}</td>
 									<td>
-										<a class="btn" (click)="onDelete(gas.$key)">
+										<!-- <a class="btn" (click)="onDelete(gas.$key)">
 											<i class="fa fa-trash-o"></i>
-										</a>
+										</a> -->
+										<button type="button" (click)="detalhes(gas)" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+											Detalhes
+										</button>
 									</td>
 								</tr>
 
@@ -321,6 +302,71 @@
 					</div>
 				</div>
 				<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+			</div>
+		</div>
+
+		<!-- The Modal -->
+		<div class="modal" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title">Detalhe do Pedido</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div class="table-responsive">
+							<table id="tabelaModal" class="table" style="width:100%">
+								<tr>
+									<th>Nome:</th>
+									<td>{{usuarioPedido.nome}}</td>
+									<th>Celular:</th>
+									<td>{{usuarioPedido.celular}}</td>
+								</tr>
+								<tr>
+									<th>Endereço</th>
+									<td>{{usuarioPedido.endereco}}</td>
+								</tr>
+								<tr>
+									<th>Cidade</th>
+									<td>{{usuarioPedido.endereco}}</td>
+									<th>Bairro</th>
+									<td>{{usuarioPedido.bairro}}</td>
+								</tr>
+								<tr>
+									<th>Cep</th>
+									<td>{{usuarioPedido.cep}}</td>
+									<th>Complemento</th>
+									<td>{{usuarioPedido.complemento}}</td>
+								</tr>
+							</table>
+						</div>
+
+						<ul class="list-group">
+							<li class="list-group-item">Detalhes do Pedido
+								<ul>
+									<li>{{detalhePedido.quantidade}}</li>
+									<li>{{detalhePedido.tipoObjeto}}</li>
+									<li>{{detalhePedido.marca}}</li>
+									<li>{{detalhePedido.total}}</li>
+									<li>{{detalhePedido.novoRetornavel}}</li>
+									<li>{{detalhePedido.formaPagamento}}</li>
+									<li>{{detalhePedido.dataPedido}}</li>
+									<li>{{detalhePedido.hora}}</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+
+				</div>
 			</div>
 		</div>
 		<!-- /.container-fluid-->

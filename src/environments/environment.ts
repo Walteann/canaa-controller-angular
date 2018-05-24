@@ -12,5 +12,11 @@ export const environment = {
         projectId: 'angular5crud-c5fdb',
         storageBucket: 'angular5crud-c5fdb.appspot.com',
         messagingSenderId: '1054446784488'
+//         apiKey: 'AIzaSyD4rn55B8rsyxFPpNQM0GBQ_YBQPcWJY_I',
+//   authDomain: 'fir-auth-99d11.firebaseapp.com',
+//   databaseURL: 'https://fir-auth-99d11.firebaseio.com',
+//   projectId: 'fir-auth-99d11',
+//   storageBucket: 'fir-auth-99d11.appspot.com',
+//   messagingSenderId: '350667972619'
     }
 };
