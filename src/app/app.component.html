@@ -7,7 +7,7 @@
 		<span class="navbar-toggler-icon"></span>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarResponsive">
-		<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+		<ul class="navbar-nav navbar-sidenav collapsed" id="exampleAccordion">
 			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="dashboard">
 				<a class="nav-link" href="index.html">
 					<i class="fa fa-fw fa-dashboard"></i>
@@ -40,6 +40,7 @@
 				</a>
 			</li>
 		</ul>
+
 		<ul class="navbar-nav ml-auto">
 
 			<li class="nav-item dropdown">
@@ -121,7 +122,7 @@
 						<div class="card-body-icon">
 							<i class="fa fa-fw fa-users"></i>
 						</div>
-						<div class="mr-5">37 Usuarios!</div>
+						<div class="mr-5">{{quantidadeUsuaarios}} Usuarios!</div>
 					</div>
 					<a class="card-footer text-white clearfix small z-1" href="#">
 						<span class="float-left">Ver Detalhes</span>
@@ -186,7 +187,7 @@
 								<canvas id="myBarChart" width="100" height="50"></canvas>
 							</div>
 							<div class="col-sm-4 text-center my-auto">
-								<div class="h4 mb-0 text-primary">R$34,693</div>
+								<div class="h4 mb-0 text-primary">R$23.893,00</div>
 								<div class="small text-muted">Receita</div>
 								<hr>
 								<div class="h4 mb-0 text-warning">R$18,474</div>
@@ -210,32 +211,44 @@
 						<table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
 							<thead>
 								<tr>
+									<th>Avatar</th>
 									<th>Nome</th>
-									<th>Endereço</th>
-									<th>CEP</th>
-									<th>Bairro</th>
-									<th>Telefone</th>
 									<th>E-mail</th>
+									<th>Telefone</th>
+									<th>Endereço</th>
+									<th>Cidade</th>
+									<th>Bairro</th>
+									<th>Detalhe</th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
+									<th>Avatar</th>
 									<th>Nome</th>
+									<th>E-mail</th>
+									<th>Telefone</th>
 									<th>Endereço</th>
 									<th>CEP</th>
 									<th>Bairro</th>
-									<th>Telefone</th>
-									<th>E-mail</th>
+									<th>detalhe</th>
 								</tr>
 							</tfoot>
 							<tbody>
-								<tr *ngFor="let usuario of usuarios">
+								<tr *ngFor="let usuario of usuarios | reverse">
+									<td>
+										<img src="{{usuario.user.photoURL}}" alt="Avatar" class="avatar">
+									</td>
 									<td>{{usuario.nome}}</td>
+									<td>{{usuario.user.email}}</td>
+									<td>{{usuario.celular}}</td>
 									<td>{{usuario.endereco}}</td>
-									<td>{{usuario.cep}}</td>
+									<td>{{usuario.cidade}}</td>
 									<td>{{usuario.bairro}}</td>
-									<td>{{usuario.tel}}</td>
-									<td>{{usuario.email}}</td>
+									<td>
+										<button type="button" (click)="detalhesUsuario(usuario)" class="btn btn-primary" data-toggle="modal" data-target="#modalUsuario">
+											<i class="fa fa-search "></i>
+										</button>
+									</td>
 								</tr>
 
 							</tbody>
@@ -359,6 +372,55 @@
 								</ul>
 							</li>
 						</ul>
+					</div>
+
+					<!-- Modal footer -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="modalUsuario">
+			<div class="modal-dialog">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header">
+						<h4 class="modal-title">Detalhe do Pedido</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body">
+						<div class="table-responsive">
+							<table id="tabelaModal" class="table" style="width:100%">
+								<tr>
+									<th>Nome:</th>
+									<td>{{usuarioList.nome}}</td>
+									<th>Celular:</th>
+									<td>{{usuarioList.celular}}</td>
+								</tr>
+								<tr>
+									<th>Endereço</th>
+									<td>{{usuarioList.endereco}}</td>
+								</tr>
+								<tr>
+									<th>Cidade</th>
+									<td>{{usuarioList.endereco}}</td>
+									<th>Bairro</th>
+									<td>{{usuarioList.bairro}}</td>
+								</tr>
+								<tr>
+									<th>Cep</th>
+									<td>{{usuarioList.cep}}</td>
+									<th>Complemento</th>
+									<td>{{usuarioList.complemento}}</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 
 					<!-- Modal footer -->

@@ -32,7 +32,7 @@
         "vendor/chart.js/Chart.min.js",
         "vendor/datatables/jquery.dataTables.js",
         "vendor/datatables/dataTables.bootstrap4.js",
-        "js/sb-admin.min.js",
+        "js/sb-admin.js",
         "js/sb-admin-datatables.js"
       ],
       "environmentSource": "environments/environment.ts",
