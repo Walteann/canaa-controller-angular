@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Observable } from 'rxjs/observable';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
@@ -15,9 +16,9 @@ import { Observable } from 'rxjs/observable';
 })
 export class AppComponent implements OnInit, AfterViewInit {
     title = 'app';
-    usuarios: any = [];
+    usuarios: Endereco[];
     item: Observable<any>;
-    usuariosTwo: any;
+    usuariosTwo: Observable<any[]>;
     ctx: any;
     ctxBarChart: any;
     myLineChart: any;
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+
         this.buscarEmployee();
         // this.buscarUsuarios();
         // this.listaTodosUsuarios();
@@ -66,23 +68,42 @@ export class AppComponent implements OnInit, AfterViewInit {
         //     });
         // });
         /*esse funciona \/ */
-        this.getAllUsuarios().valueChanges().subscribe(data =>  {
-            let teste;
-            console.log(data);
-            data.forEach((element) =>   {
-                this.usuarios = [];
-                this.getUserId(element['uid']).subscribe((dados) =>    {
-                    console.log(element);
-                    if (dados['enderecos'] !== undefined) {
-                                teste = Object.keys(dados['enderecos']);
-                                this.usuarios.push(dados['enderecos'][teste]);
-                                console.log(this.usuarios);
-                                this.quantidadeUsuaarios = this.usuarios.length;
-                            }
-                        });
-                    });
-        });
+        // this.getAllUsuarios().valueChanges().subscribe(data =>  {
+        //     let teste;
+        //     console.log(data);
+        //     data.forEach((element) =>   {
+        //         this.usuarios = [];
+        //         this.getUserId(element['uid']).subscribe((dados) =>    {
+        //             console.log(element);
+        //             if (dados['enderecos'] !== undefined) {
+        //                         teste = Object.keys(dados['enderecos']);
+        //                         this.usuarios.push(dados['enderecos'][teste]);
+        //                         console.log(this.usuarios);
+        //                         this.quantidadeUsuaarios = this.usuarios.length;
+        //                     }
+        //                 });
+        //             });
+        // });
+        // FUNCIONA
+        // this.getAllUsuarios().subscribe(data =>  {
+        //     let teste;
+        //     console.log(data);
+        //     data.forEach((element) =>   {
+        //         this.usuarios = [];
+        //         this.getUserId(element['uid']).subscribe((dados) =>    {
+        //             console.log(element);
+        //             if (dados['enderecos'] !== undefined) {
+        //                         teste = Object.keys(dados['enderecos']);
+        //                         this.usuarios.push(dados['enderecos'][teste]);
+        //                         console.log(this.usuarios);
+        //                         this.quantidadeUsuaarios = this.usuarios.length;
+        //                     }
+        //                 });
+        //             });
+        // });
 
+
+        // console.log(this.getAllUsuarios());
 
         // this.getUserList().subscribe(data => {
         //     this.usuarios = [];
@@ -110,6 +131,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         //         });
         //     });
         // });
+
+        this.usuariosTwo = this.teste();
+        console.log(this.usuariosTwo);
     }
 
     ngAfterViewInit() {
@@ -118,6 +142,31 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     }
 
+    teste(): any {
+        this.getAllUsuarios().subscribe(data =>  {
+            let teste;
+            let uidNovo;
+            console.log(data);
+            data.forEach((element) =>   {
+                this.usuarios = [];
+                this.getUserId(element['uid']).subscribe((dados) =>    {
+                    console.log(this.usuarios);
+                    console.log(element);
+                    uidNovo = Object.keys(dados['enderecos']);
+
+
+                        if (dados['enderecos'] !== undefined || dados['enderecos'] !== null) {
+                                    teste = Object.keys(dados['enderecos']);
+                                    this.usuarios.push(dados['enderecos'][teste]);
+                                    this.quantidadeUsuaarios = this.usuarios.length;
+                                    console.log(this.usuarios);
+                                    return this.usuarios;
+                                }
+                            });
+                        });
+
+            });
+    }
     // buscarUsuarios() {
     //     let keyEndereco;
     //     let valores;
@@ -167,7 +216,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     // }
 
     getAllUsuarios() {
-        return this.db.list('listaUsuarios');
+        return this.db.list('listaUsuarios').snapshotChanges().pipe(
+            map(changes =>
+              changes.map(c => ({ key: c.payload.key, ...c.payload.val() }))
+            )
+          );
     }
 
     getUserId(key: string) {
