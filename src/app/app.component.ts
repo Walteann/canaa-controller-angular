@@ -85,22 +85,22 @@ export class AppComponent implements OnInit, AfterViewInit {
         //             });
         // });
         // FUNCIONA
-        // this.getAllUsuarios().subscribe(data =>  {
-        //     let teste;
-        //     console.log(data);
-        //     data.forEach((element) =>   {
-        //         this.usuarios = [];
-        //         this.getUserId(element['uid']).subscribe((dados) =>    {
-        //             console.log(element);
-        //             if (dados['enderecos'] !== undefined) {
-        //                         teste = Object.keys(dados['enderecos']);
-        //                         this.usuarios.push(dados['enderecos'][teste]);
-        //                         console.log(this.usuarios);
-        //                         this.quantidadeUsuaarios = this.usuarios.length;
-        //                     }
-        //                 });
-        //             });
-        // });
+        this.getAllUsuarios().subscribe(data =>  {
+            let teste;
+            console.log(data);
+            data.forEach((element) =>   {
+                this.usuarios = [];
+                this.getUserId(element['uid']).subscribe((dados) =>    {
+                    console.log(element);
+                    if (dados['enderecos'] !== undefined) {
+                                teste = Object.keys(dados['enderecos']);
+                                this.usuarios.push(dados['enderecos'][teste]);
+                                console.log(this.usuarios);
+                                this.quantidadeUsuaarios = this.usuarios.length;
+                            }
+                        });
+                    });
+        });
 
 
         // console.log(this.getAllUsuarios());
@@ -132,8 +132,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         //     });
         // });
 
-        this.usuariosTwo = this.teste();
-        console.log(this.usuariosTwo);
+        // this.usuariosTwo = this.teste();
+        // console.log(this.usuariosTwo);
     }
 
     ngAfterViewInit() {
@@ -142,31 +142,31 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     }
 
-    teste(): any {
-        this.getAllUsuarios().subscribe(data =>  {
-            let teste;
-            let uidNovo;
-            console.log(data);
-            data.forEach((element) =>   {
-                this.usuarios = [];
-                this.getUserId(element['uid']).subscribe((dados) =>    {
-                    console.log(this.usuarios);
-                    console.log(element);
-                    uidNovo = Object.keys(dados['enderecos']);
+    // teste(): any {
+    //     this.getAllUsuarios().subscribe(data =>  {
+    //         let teste;
+    //         let uidNovo;
+    //         console.log(data);
+    //         data.forEach((element) =>   {
+    //             this.usuarios = [];
+    //             this.getUserId(element['uid']).subscribe((dados) =>    {
+    //                 console.log(this.usuarios);
+    //                 console.log(element);
+    //                 uidNovo = Object.keys(dados['enderecos']);
 
 
-                        if (dados['enderecos'] !== undefined || dados['enderecos'] !== null) {
-                                    teste = Object.keys(dados['enderecos']);
-                                    this.usuarios.push(dados['enderecos'][teste]);
-                                    this.quantidadeUsuaarios = this.usuarios.length;
-                                    console.log(this.usuarios);
-                                    return this.usuarios;
-                                }
-                            });
-                        });
+    //                     if (dados['enderecos'] !== undefined || dados['enderecos'] !== null) {
+    //                                 teste = Object.keys(dados['enderecos']);
+    //                                 this.usuarios.push(dados['enderecos'][teste]);
+    //                                 this.quantidadeUsuaarios = this.usuarios.length;
+    //                                 console.log(this.usuarios);
+    //                                 return this.usuarios;
+    //                             }
+    //                         });
+    //                     });
 
-            });
-    }
+    //         });
+    // }
     // buscarUsuarios() {
     //     let keyEndereco;
     //     let valores;
